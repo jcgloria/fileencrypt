@@ -38,7 +38,7 @@
             <h1 style="text-align: center;">Upload</h1>
             <div class="mb-3">
                 <label for="formFile" class="form-label">Choose a File</label>
-                <input class="form-control" type="file" id="formFile" name="file">
+                <input class="form-control" type="file" id="formFile" name="file" onchange="handleFileSelect()">
             </div>
             <div class="mb-3">
                 <label for="formBucket" class="form-label">Bucket</label>
@@ -53,8 +53,8 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="formRoute" class="form-label">Route</label>
-                <input type="text" class="form-control" value="/" aria-label="Route" id="formRoute" name="route" autocomplete="off">
+                <label for="formRoute" class="form-label">File Path</label>
+                <input type="text" class="form-control" placeholder="/" aria-label="Route" id="formRoute" name="route" autocomplete="off">
             </div>
             <div style="text-align: center;">
                 <button type="submit" class="btn btn-primary">Upload</button>
@@ -65,6 +65,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/fastbootstrap@1.1.1/dist/js/fastbootstrap.min.js"
         integrity="sha256-EA7CcsZVlKgu1Vdk1Nsl648ddvyavbdyjR/vnaTuomk=" crossorigin="anonymous"></script>
+        <script defer src="{{ url_for('static', filename='script_upload.js') }}"></script>
 </body>
 
 </html>

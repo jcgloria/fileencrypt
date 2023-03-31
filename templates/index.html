@@ -80,20 +80,16 @@
                 <td>{{file.size}}</td>
                 <td>{{file.lastModified}}</td>
                 <td>
-                    <form action="/download" method="POST">
-                        <input type="hidden" name="bucket" value="{{file.name}}">
-                        <input type="hidden" name="key" value="{{currentBucket}}">
-                    <button class="icon-button"><i class="fa fa-cloud-download" aria-hidden="true"></i></button>
-                    </form>
+                    <button class="icon-button" data-bucket="{{currentBucket}}" data-key="{{file.name}}"><i
+                            class="fa fa-cloud-download" aria-hidden="true"></i></button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
-
     <script src="https://cdn.jsdelivr.net/npm/fastbootstrap@1.1.1/dist/js/fastbootstrap.min.js"
         integrity="sha256-EA7CcsZVlKgu1Vdk1Nsl648ddvyavbdyjR/vnaTuomk=" crossorigin="anonymous"></script>
+    <script defer src="{{ url_for('static', filename='script_index.js') }}"></script>
 </body>
 
 </html>

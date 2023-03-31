@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, abort, request
+from flask import Flask, render_template, redirect, abort, request, send_file
 from flask_cors import CORS
 import boto3
 import json
@@ -32,6 +32,26 @@ def upload():
         return redirect("/" + currentBucket + "/")
     else:
         return render_template('upload.html', currentBucket=currentBucket, bucketList=bucketList)
+
+@app.route("/downloadRequest", methods=['POST'])
+def downloadRequest():
+    body = request.get_json()
+    bucket = body['bucket']
+    key = body['key']
+    file = s3.get_object(Bucket=bucket, Key=key)
+    # save file to disk
+    fileName = key.split("/")[-1] #remove directories if any
+    with open('./client_files/' + fileName, 'wb') as f:
+        f.write(file['Body'].read())
+    return json.dumps({"file": fileName}), 200
+
+@app.route("/downloadFile")
+def downloadFile():
+    # get the get params
+    file = request.args.get('file')
+    print("FILEE")
+    print(file)
+    return send_file('./client_files/'+file, as_attachment=True)
 
 @app.route('/<path:dirPath>')
 def any_route(dirPath):
@@ -89,6 +109,3 @@ def convert_size(size_bytes):
         return f"{int(size_bytes)} {units[i]}"
     else:
         return f"{size_bytes:.2f} {units[i]}"
-
-
-
