@@ -32,6 +32,12 @@
             </ul>
         </div>
     </nav>
+    <div id ="progressBar" class="progress progress-indeterminate" hidden>
+        <div class="progress-bar"
+         role="progressbar" aria-label="Basic example">
+          <span class="visually-hidden">progress bar</span>
+        </div>
+      </div>
 
     <form action="/upload", method="POST", enctype="multipart/form-data">
         <div class="formContainer">
@@ -57,11 +63,10 @@
                 <input type="text" class="form-control" placeholder="/" aria-label="Route" id="formRoute" name="route" autocomplete="off">
             </div>
             <div style="text-align: center;">
-                <button type="submit" class="btn btn-primary">Upload</button>
+                <button id="submitBtn" type="submit" class="btn btn-primary">Upload</button>
             </div>
         </div>
     </form>
-
 
     <script src="https://cdn.jsdelivr.net/npm/fastbootstrap@1.1.1/dist/js/fastbootstrap.min.js"
         integrity="sha256-EA7CcsZVlKgu1Vdk1Nsl648ddvyavbdyjR/vnaTuomk=" crossorigin="anonymous"></script>

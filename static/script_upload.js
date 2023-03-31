@@ -3,3 +3,7 @@ function handleFileSelect() {
     const fileName = fileInput.files[0].name;
     document.getElementById("formRoute").value = fileName;
   }
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  progressBar = document.getElementById("progressBar")
+  progressBar.removeAttribute("hidden")
+});

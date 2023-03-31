@@ -15,11 +15,14 @@ for bucket in s3.list_buckets()['Buckets']:
     bucketList.append(bucket['Name'])
 
 currentBucket = 'juan-mybucket'
-dir_string = ""
 
 @app.route('/')
 def index():
     return redirect("/" + currentBucket + "/")
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
@@ -64,7 +67,6 @@ def get_objects_by_dir(dir):
     dirs = dir.split("/")
     bucketName = dirs[0]
     if bucketName not in bucketList: # Bucket exists?
-        print("404 at bucketName check")
         return 404
     global currentBucket
     currentBucket = bucketName # Set the current bucket
@@ -76,8 +78,6 @@ def get_objects_by_dir(dir):
     try:
         s3.head_object(Bucket=bucketName, Key=route) # does the directory exist?
     except:
-        print("404 at head_object call")
-        print(route)
         return 404
     return parseObjects(s3.list_objects(Bucket=bucketName, Prefix=route)['Contents'], route)
 
@@ -93,8 +93,6 @@ def parseObjects(objects, route):
         result['isFolder'] = object['Key'].endswith("/")
         if result['name'].startswith(route) and result['isFolder']:
             result['name'] = result['name'].replace(route, "")
-        if route == "" and result['name'].count("/") > 0 and not result['isFolder']:
-            continue
         results.append(result)
     #organize results. Place folders first
     results.sort(key=lambda x: x['isFolder'], reverse=True)
