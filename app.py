@@ -84,14 +84,20 @@ def get_objects_by_dir(dir):
 def parseObjects(objects, route):
     results = []
     for object in objects:
-        if object['Key'] == route or ( object['Key'] in route and object['Key'].count("/") > 1):
-            continue
         result = {}
+        if object['Key'] == route:
+            continue
         result['name'] = object['Key']
         result['size'] = convert_size(object['Size'])
         result['lastModified'] = object['LastModified']
         result['isFolder'] = object['Key'].endswith("/")
+        if result['name'].startswith(route) and result['isFolder']:
+            result['name'] = result['name'].replace(route, "")
+        if route == "" and result['name'].count("/") > 0 and not result['isFolder']:
+            continue
         results.append(result)
+    #organize results. Place folders first
+    results.sort(key=lambda x: x['isFolder'], reverse=True)
     return results
 
 def handle_uploaded_file(f, bucket, route):
