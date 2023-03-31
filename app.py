@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, abort, request, send_file
 from flask_cors import CORS
 import boto3
 import json
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -14,7 +15,7 @@ bucketList = []
 for bucket in s3.list_buckets()['Buckets']:
     bucketList.append(bucket['Name'])
 
-currentBucket = 'juan-mybucket'
+currentBucket = bucketList[0]
 
 @app.route('/')
 def index():
@@ -52,8 +53,6 @@ def downloadRequest():
 def downloadFile():
     # get the get params
     file = request.args.get('file')
-    print("FILEE")
-    print(file)
     return send_file('./client_files/'+file, as_attachment=True)
 
 @app.route('/<path:dirPath>')
@@ -61,6 +60,7 @@ def any_route(dirPath):
     files = get_objects_by_dir(dirPath)
     if files == 404:
         abort(404)
+    print("FILES")
     return render_template('index.html', files=files, bucketList=bucketList, currentBucket=currentBucket, dir_string=dirPath)
 
 def get_objects_by_dir(dir):
@@ -73,13 +73,21 @@ def get_objects_by_dir(dir):
     # remove empty strings
     dirs = list(filter(None, dirs))
     if len(dirs) == 1: # User only wants the bucket root
-        return parseObjects(s3.list_objects(Bucket=bucketName)['Contents'], "") 
+        objects = s3.list_objects(Bucket=bucketName)
+        if 'Contents' in objects:
+            return parseObjects(objects['Contents'], "")
+        else:
+            return []
     route = dir.split("/", 1)[1] # User wants a specific directory in a bucket.
     try:
         s3.head_object(Bucket=bucketName, Key=route) # does the directory exist?
     except:
         return 404
-    return parseObjects(s3.list_objects(Bucket=bucketName, Prefix=route)['Contents'], route)
+    objects = s3.list_objects(Bucket=bucketName, Prefix=route)
+    if 'Contents' in objects:
+        return parseObjects(objects['Contents'], route)
+    else:
+        return []
 
 def parseObjects(objects, route):
     results = []
@@ -89,7 +97,7 @@ def parseObjects(objects, route):
             continue
         result['name'] = object['Key']
         result['size'] = convert_size(object['Size'])
-        result['lastModified'] = object['LastModified']
+        result['lastModified'] = object['LastModified'].strftime("%B %d, %Y, %I:%M %p")
         result['isFolder'] = object['Key'].endswith("/")
         if result['name'].startswith(route) and result['isFolder']:
             result['name'] = result['name'].replace(route, "")

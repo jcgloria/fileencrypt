@@ -68,6 +68,7 @@
             </tr>
         </thead>
         <tbody>
+            {% if files %}
             {% for file in files %}
             <tr>
                 {% if file.isFolder %}
@@ -85,6 +86,11 @@
                 </td>
             </tr>
             {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No files found</td>
+            </tr>
+            {% endif %}
         </tbody>
     </table>
     <script src="https://cdn.jsdelivr.net/npm/fastbootstrap@1.1.1/dist/js/fastbootstrap.min.js"
