@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+
+    <title>FilEncrypt</title>
+    <link rel="stylesheet"
+        integrity="sha512-YFENbnqHbCRmJt5d+9lHimyEMt8LKSNTMLSaHjvsclnZGICeY/0KYEeiHwD1Ux4Tcao0h60tdcMv+0GljvWyHg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@1.1.1/dist/css/fastbootstrap.min.css" rel="stylesheet"
+        integrity="sha256-Yzz+k0rjOAAPX4Nkr73zQvppd6buXomR9n4uQ5lrSYE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <!--Top Bar-->
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href={{"/"+ currentBucket + "/" }}>FilEncrypt</a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload"><i class="fas fa-cloud-upload"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/settings"><i class="fas fa-cog"></i></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--Navigation Breadcrumb-->
+    <nav class="breadcrumb-container" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+                <a class="dropdown-toggle" href="/" data-bs-toggle="dropdown" aria-expanded="false"
+                    style="font-weight: bold;">{{ currentBucket }}</a>
+                <ul class="dropdown-menu">
+                    {% for bucket in bucketList %}
+                    <li>
+                        <a href="{{" /"+ bucket + "/" }}" class="dropdown-item">{{ bucket }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% set path = '/' %}
+            {% for dir in dir_string.strip('/').split('/') if dir %}
+            {% set pathList = dir_string.strip('/').split('/')[:loop.index] %}
+            {% set path = '/' + pathList|join('/') + '/' %}
+            <li class="breadcrumb-item">
+                <a href="{{ path }}">{{ dir }}</a>
+            </li>
+            {% endfor %}
+        </ol>
+    </nav>
+
+    <!--File List-->
+    <table class="table">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Size</th>
+                <th scope="col">Last Modified</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                {% if file.isFolder %}
+                <td>
+                    <a href="{{file.name}}">{{file.name}}</a>
+                </td>
+                {% else %}
+                <td style="font-weight: bold;">{{file.name}}</td>
+                {% endif %}
+                <td>{{file.size}}</td>
+                <td>{{file.lastModified}}</td>
+                <td>
+                    <form action="/download" method="POST">
+                        <input type="hidden" name="bucket" value="{{file.name}}">
+                        <input type="hidden" name="key" value="{{currentBucket}}">
+                    <button class="icon-button"><i class="fa fa-cloud-download" aria-hidden="true"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/fastbootstrap@1.1.1/dist/js/fastbootstrap.min.js"
+        integrity="sha256-EA7CcsZVlKgu1Vdk1Nsl648ddvyavbdyjR/vnaTuomk=" crossorigin="anonymous"></script>
+</body>
+
+</html>

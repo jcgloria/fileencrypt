@@ -1,0 +1,46 @@
+html, body {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	color: #333;
+	margin: 0;
+	padding: 5px;
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+.icon-button {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #f8f9fa; /* Light gray background color */
+	border: none;
+	border-radius: 50%; /* Creates a circular shape */
+	width: 40px; /* Adjust button size */
+	height: 40px; /* Adjust button size */
+	transition: background-color 0.3s ease; /* Transition for hover effect */
+  }
+  
+  .icon-button:hover {
+	background-color: #e2e6ea; /* Darker gray background color on hover */
+	cursor: pointer;
+  }
+  
+  .icon-button i {
+	font-size: 20px; /* Adjust icon size */
+  }
+  .breadcrumb-container{
+	margin: 1% auto;
+  }
+  ul.navbar-nav{
+	flex-direction: row;
+  }
+  li.nav-item{
+	margin: auto 30px;
+  }
+  .formContainer{
+	max-width: 640px;
+	margin: 20px auto;
+  }
