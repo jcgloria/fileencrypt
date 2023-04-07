@@ -1,3 +1,4 @@
 Flask==2.2.3
 Flask-Cors==3.0.10
 boto3==1.26.103
+cryptography==40.0.1

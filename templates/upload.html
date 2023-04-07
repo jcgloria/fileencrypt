@@ -64,6 +64,18 @@
                 <input type="text" class="form-control" placeholder="/" aria-label="Route" id="formRoute" name="route" autocomplete="off" required>
                 <div class="invalid-feedback">File path cannot be empty</div>
             </div>
+            <label class="form-label">Choose Key</label>
+            <div class="mb-3">
+                    <select class="form-select" id="formKey" name="formKey">
+                        {% for key in keyList %}
+                        {% if key == currentKey %}
+                        <option selected>{{key}}</option>
+                        {% else %}
+                        <option value="{{key}}">{{key}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+            </div>
             <div style="text-align: center;">
                 <button id="submitBtn" type="submit" class="btn btn-primary">Upload</button>
             </div>

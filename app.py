@@ -2,7 +2,8 @@ from flask import Flask, render_template, redirect, abort, request, send_file
 from flask_cors import CORS
 import boto3
 import json
-from datetime import datetime
+import encrypt_utils
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -14,8 +15,15 @@ s3 = boto3.client('s3', aws_access_key_id=credentials['aws_access_key_id'], aws_
 bucketList = []
 for bucket in s3.list_buckets()['Buckets']:
     bucketList.append(bucket['Name'])
-
 currentBucket = bucketList[0]
+
+# Get the list of keys
+keyList = []
+files = os.listdir("./keys")
+for file in files:
+    if file.endswith(".key"):
+        keyList.append(file)
+currentKey = keyList[0]
 
 @app.route('/')
 def index():
@@ -23,7 +31,7 @@ def index():
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html')
+    return render_template('settings.html', keyList=keyList, currentKey=currentKey)
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
@@ -35,7 +43,7 @@ def upload():
         handle_uploaded_file(file_data, bucket, route)
         return redirect("/" + currentBucket + "/")
     else:
-        return render_template('upload.html', currentBucket=currentBucket, bucketList=bucketList)
+        return render_template('upload.html', currentBucket=currentBucket, bucketList=bucketList, keyList=keyList, currentKey=currentKey)
 
 @app.route("/downloadRequest", methods=['POST'])
 def downloadRequest():
@@ -62,6 +70,27 @@ def any_route(dirPath):
         abort(404)
     print("FILES")
     return render_template('index.html', files=files, bucketList=bucketList, currentBucket=currentBucket, dir_string=dirPath)
+
+@app.route('/generateKey', methods=['GET','POST'])
+def generateKey():
+    if request.method == 'GET':
+        return redirect("/settings")
+    else:
+        keyName = request.form['keyName']
+        encrypt_utils.generateKey("./keys/" + keyName + ".key")
+        keyList.append(keyName + ".key")
+        return render_template('settings.html', keyList=keyList, currentKey=currentKey, message="Key generated successfully")
+
+@app.route('/importKey', methods=['GET','POST'])
+def importKey():
+    if request.method == 'GET':
+        return redirect("/settings")
+    else:
+        keyName = request.form['keyName']
+        keyString = request.form['keyString']
+        encrypt_utils.importKey("./keys/" + keyName + ".key", keyString)
+        keyList.append(keyName)
+        return render_template('settings.html', keyList=keyList, currentKey=currentKey, message="Key imported successfully")
 
 def get_objects_by_dir(dir):
     dirs = dir.split("/")

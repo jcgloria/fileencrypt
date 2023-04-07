@@ -32,11 +32,46 @@
             </ul>
         </div>
     </nav>
-    <form>
-        <div class="formContainer">
-            <h1 style="text-align: center;">Settings</h1>
-        </div>
-    </form>
+    {% if message %}
+    <div class="alert alert-success" role="alert">
+        {{ message }}
+      </div>
+    {% endif %}
+
+    <div class="formContainer">
+        <h1 style="text-align: center;">Settings</h1>
+        <!--Generate a new key-->
+        <form action="/generateKey" method="POST">
+            <div class="mb-3">
+                <label for="formGenKey" class="form-label">Generate a new key</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="formKeyName">Key Name</span>
+                    <input id="formGenKey" name="keyName" type="text" class="form-control" autocomplete="off"/>
+                    <span class="input-group-text">.key</span>
+                  </div>
+            </div>
+            <div style="text-align: center;">
+                <button type="submit" class="btn btn-outline-primary">Generate Key</button>
+            </div>
+        </form>
+        <!--Import new Key-->
+        <form action="/importKey", method="POST">
+            <label for="formGenKey" class="form-label">Import a key</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="formKeyName">Key Name</span>
+                <input type="text" name="keyName" class="form-control" aria-label="Key Name" aria-describedby="formKeyName" autocomplete="off" />
+                <span class="input-group-text">.key</span>
+              </div>
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="formKeyString">Key String</span>
+                <input type="text" name="keyString" class="form-control" placeholder="256-bit, base64 encoded string" aria-label="Key String" aria-describedby="formKeyString" autocomplete="off"/>
+              </div>
+              <div style="text-align: center;">
+                <button type="submit" class="btn btn-outline-primary">Import Key</button>
+            </div>
+        </form>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/fastbootstrap@1.1.1/dist/js/fastbootstrap.min.js"
         integrity="sha256-EA7CcsZVlKgu1Vdk1Nsl648ddvyavbdyjR/vnaTuomk=" crossorigin="anonymous"></script>
