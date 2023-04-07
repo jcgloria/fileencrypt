@@ -1,5 +1,5 @@
 .venv/
 env.json
 __pycache__/
-client_files/
-keys/
+client_files/*
+keys/*
