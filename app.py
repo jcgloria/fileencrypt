@@ -68,7 +68,6 @@ def any_route(dirPath):
     files = get_objects_by_dir(dirPath)
     if files == 404:
         abort(404)
-    print("FILES")
     return render_template('index.html', files=files, bucketList=bucketList, currentBucket=currentBucket, dir_string=dirPath)
 
 @app.route('/generateKey', methods=['GET','POST'])
