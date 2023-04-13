@@ -8,6 +8,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+# load credentials and create s3 client
 credentials = json.loads(open('env.json').read())
 s3 = boto3.client('s3', aws_access_key_id=credentials['aws_access_key_id'], aws_secret_access_key=credentials['aws_secret_access_key'], region_name=credentials['region'])
 
@@ -31,6 +32,12 @@ if len(keyList) > 0:
 else:
     currentKey = ""
 
+#add ./keys and ./client_files if they don't exist
+if not os.path.exists("./keys"):
+    os.makedirs("./keys")
+if not os.path.exists("./client_files"):
+    os.makedirs("./client_files")
+
 @app.route('/')
 def index():
     return redirect("/" + currentBucket + "/")
@@ -53,9 +60,9 @@ def upload():
             return redirect("/" + currentBucket + "/")
         else:
             msg = "Error uploading file"
-
     return render_template('upload.html', currentBucket=currentBucket, bucketList=bucketList, keyList=keyList, currentKey=currentKey, message=msg)
 
+# Prepare file for download. Decrypt it and save it in the client_files folder
 @app.route("/downloadRequest", methods=['POST'])
 def downloadRequest():
     body = request.get_json()
@@ -75,12 +82,14 @@ def downloadRequest():
         f.write(decrypted)
     return json.dumps({"file": fileName}), 200
 
+# Download the file from the client_files folder
 @app.route("/downloadFile")
 def downloadFile():
     # get the get params
     file = request.args.get('file')
     return send_file('./client_files/'+file, as_attachment=True)
 
+# Dynamic navigation to any directory in any bucket
 @app.route('/<path:dirPath>')
 def any_route(dirPath):
     files = get_objects_by_dir(dirPath)

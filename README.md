@@ -4,7 +4,7 @@
 ### Installation
 #### 1. Set AWS credentials in `env.json`
 ```json
-    {
+{
     "aws_access_key_id": "<Access Key ID>",
     "aws_secret_access_key": "<Secret Access Key>",
     "region": "<region>"
