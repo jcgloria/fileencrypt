@@ -1,6 +1,8 @@
 const buttons = document.querySelectorAll(".icon-button")
 buttons.forEach((button) => {
-    button.addEventListener('click',(event) =>{
+    button.addEventListener('click', (event) => {
+        progressBar = document.getElementById("progressBar")
+        progressBar.removeAttribute("hidden")
         const bucket = button.dataset.bucket
         const key = button.dataset.key
         //POST request to download
@@ -9,17 +11,22 @@ buttons.forEach((button) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({bucket, key})
+            body: JSON.stringify({ bucket, key })
         }).then(response => {
-            if(response.ok){
-                return response.json()
-            }
-            throw new Error('Request failed!')
-        }, networkError => console.log(networkError.message)
+            return response.json()
+        }
         ).then(data => {
-            //open a url in a new window
-            const url = window.location.origin + "/downloadFile?file=" + data.file
-            window.open(url)  
-        })     
+            if (data["error"]) {
+                errorBanner = document.getElementById("errorMsg")
+                errorBanner.innerHTML = "Error: " + data["error"]
+                errorBanner.removeAttribute("hidden")
+            }
+            else {
+                //open a url in a new window
+                const url = window.location.origin + "/downloadFile?file=" + data.file
+                window.open(url)
+            }
+        })
+        progressBar.setAttribute("hidden", true)
     })
 })  

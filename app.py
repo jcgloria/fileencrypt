@@ -15,7 +15,10 @@ s3 = boto3.client('s3', aws_access_key_id=credentials['aws_access_key_id'], aws_
 bucketList = []
 for bucket in s3.list_buckets()['Buckets']:
     bucketList.append(bucket['Name'])
-currentBucket = bucketList[0]
+if len(bucketList) > 0:
+    currentBucket = bucketList[0]
+else:
+    currentBucket = ""
 
 # Get the list of keys
 keyList = []
@@ -23,7 +26,10 @@ files = os.listdir("./keys")
 for file in files:
     if file.endswith(".key"):
         keyList.append(file)
-currentKey = keyList[0]
+if len(keyList) > 0:
+    currentKey = keyList[0]
+else:
+    currentKey = ""
 
 @app.route('/')
 def index():
@@ -35,15 +41,20 @@ def settings():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
+    msg = ""
     if request.method == 'POST':
         route = request.form['route']
         bucket = request.form['bucket']
         file = request.files['file']
+        key = request.form['formKey']
         file_data = file.read()
-        handle_uploaded_file(file_data, bucket, route)
-        return redirect("/" + currentBucket + "/")
-    else:
-        return render_template('upload.html', currentBucket=currentBucket, bucketList=bucketList, keyList=keyList, currentKey=currentKey)
+        success = handle_uploaded_file(file_data, key, bucket, route)
+        if success:
+            return redirect("/" + currentBucket + "/")
+        else:
+            msg = "Error uploading file"
+
+    return render_template('upload.html', currentBucket=currentBucket, bucketList=bucketList, keyList=keyList, currentKey=currentKey, message=msg)
 
 @app.route("/downloadRequest", methods=['POST'])
 def downloadRequest():
@@ -51,10 +62,17 @@ def downloadRequest():
     bucket = body['bucket']
     key = body['key']
     file = s3.get_object(Bucket=bucket, Key=key)
-    # save file to disk
-    fileName = key.split("/")[-1] #remove directories if any
+    fileName = key.split("/")[-1] # remove the path
+    fileName = fileName.replace(".encrypted", "") # remove the encrypted extension
+    if 'encryption_key' not in file['Metadata']:
+        return json.dumps({"error": "No encryption key was defined in file"}), 500
+    try:
+        key = file['Metadata']['encryption_key']
+        decrypted = encrypt_utils.decrypt("./keys/" + key, file['Body'].read())
+    except Exception as e:
+        return json.dumps({"error": "Encryption key was not found in local computer"}), 500
     with open('./client_files/' + fileName, 'wb') as f:
-        f.write(file['Body'].read())
+        f.write(decrypted)
     return json.dumps({"file": fileName}), 200
 
 @app.route("/downloadFile")
@@ -130,14 +148,19 @@ def parseObjects(objects, route):
         if result['name'].startswith(route) and result['isFolder']:
             result['name'] = result['name'].replace(route, "")
         results.append(result)
-    #organize results. Place folders first
     results.sort(key=lambda x: x['isFolder'], reverse=True)
     return results
 
-def handle_uploaded_file(f, bucket, route):
+def handle_uploaded_file(f, key, bucket, route):
     if route[0] == "/":
         route = route[1:]
-    s3.put_object(Body=f, Bucket=bucket, Key=route)
+    try:
+        encrypted = encrypt_utils.encrypt("./keys/" + key, f)
+        s3.put_object(Body=encrypted, Bucket=bucket, Key=route+'.encrypted', Metadata={'encryption_key': key})
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 def convert_size(size_bytes):
     units = ["Bytes", "KB", "MB", "GB", "TB"]

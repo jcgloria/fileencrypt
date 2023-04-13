@@ -32,6 +32,11 @@
             </ul>
         </div>
     </nav>
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+      </div>
+    {% endif %}
     <div id ="progressBar" class="progress progress-indeterminate" hidden>
         <div class="progress-bar"
          role="progressbar" aria-label="Basic example">
