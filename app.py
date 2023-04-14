@@ -12,6 +12,12 @@ CORS(app)
 credentials = json.loads(open('env.json').read())
 s3 = boto3.client('s3', aws_access_key_id=credentials['aws_access_key_id'], aws_secret_access_key=credentials['aws_secret_access_key'], region_name=credentials['region'])
 
+#add ./keys and ./client_files if they don't exist
+if not os.path.exists("./keys"):
+    os.makedirs("./keys")
+if not os.path.exists("./client_files"):
+    os.makedirs("./client_files")
+
 # Get the list of buckets
 bucketList = []
 for bucket in s3.list_buckets()['Buckets']:
@@ -31,12 +37,6 @@ if len(keyList) > 0:
     currentKey = keyList[0]
 else:
     currentKey = ""
-
-#add ./keys and ./client_files if they don't exist
-if not os.path.exists("./keys"):
-    os.makedirs("./keys")
-if not os.path.exists("./client_files"):
-    os.makedirs("./client_files")
 
 @app.route('/')
 def index():
