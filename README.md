@@ -10,6 +10,12 @@
     "region": "<region>"
 }
 ```
+The AWS credentials should have the following permissions:
+- s3:PutObject
+- s3:GetObject
+- s3:ListAllMyBuckets
+- s3:ListBucket
+            
 #### 2. Install dependencies
 ```bash
 pip3 install -r requirements.txt
