@@ -17,7 +17,7 @@ A web-based, client-side file encryption and decryption file manager integrated 
 ```
 The steps to create these credentials can be found [here](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html). An AWS account is required to create these credentials. The region can be any of the [AWS regions](https://docs.aws.amazon.com/general/latest/gr/rande.html). Example: `eu-west-2` (London). 
 
-The user associated to the AWS credentials can have administrator access for simplicity. If specific permissions want to be applied then the user should have a policy following actions:
+The user associated to the AWS credentials can have administrator access for simplicity. If specific permissions want to be applied then the user should have a policy with the following actions:
 
 - s3:PutObject
 - s3:GetObject
