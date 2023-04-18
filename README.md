@@ -1,8 +1,8 @@
 # FilEncrypt
-A web-based, client-side file encryption and decryption service integrated with AWS S3.
+A web-based, client-side file encryption and decryption file manager integrated with AWS S3. Encryption keys are purely stored in the user's machine and are never sent to AWS. 
 
-- The web application framework used was [Flask](https://flask.palletsprojects.com/en/2.2.x/).
-- The integration with AWS S3 was done using the AWS SDK for Python [Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html). 
+- The web application framework used is [Flask](https://flask.palletsprojects.com/en/2.2.x/).
+- The integration with AWS S3 is done using the AWS SDK for Python [Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html). 
 - The UI components used are from [FastBootstrap](https://fastbootstrap.com/).
 - The encryption is done using Advanced Encryption Standard (AES) with the Fernet library from [cryptography](https://cryptography.io/en/latest/fernet/).
 
