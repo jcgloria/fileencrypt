@@ -1,5 +1,5 @@
 # FilEncrypt
-A web-based, client-side file encryption and decryption service using AES integrated with AWS S3. The application is written in Python using [Flask](https://flask.palletsprojects.com/en/2.2.x/) and the AWS SDK for Python ([Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)). The UI components used are from [FastBootstrap](https://fastbootstrap.com/).
+A web-based, client-side file encryption and decryption service integrated with AWS S3. The application is written in Python using [Flask](https://flask.palletsprojects.com/en/2.2.x/) and the AWS SDK for Python ([Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)). The UI components used are from [FastBootstrap](https://fastbootstrap.com/). The encryption is done using Advanced Encryption Standard (AES) with the Fernet library from [cryptography](https://cryptography.io/en/latest/fernet/).
 
 ### Installation
 #### 1. Set AWS credentials in `env.json`
