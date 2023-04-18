@@ -7,7 +7,7 @@ A web-based, client-side file encryption and decryption file manager integrated 
 - The encryption is done using Advanced Encryption Standard (AES) with the Fernet library from [cryptography](https://cryptography.io/en/latest/fernet/).
 
 ### Installation
-#### 1. Set AWS credentials in `env.json`
+#### 1. Set AWS credentials in a new file `env.json` in the root directory of the project. The file should contain the following:
 ```json
 {
     "aws_access_key_id": "<Access Key ID>",
@@ -15,7 +15,10 @@ A web-based, client-side file encryption and decryption file manager integrated 
     "region": "<region>"
 }
 ```
-The AWS credentials should have the following permissions:
+The steps to create these credentials can be found [here](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html). An AWS account is required to create these credentials. The region can be any of the [AWS regions](https://docs.aws.amazon.com/general/latest/gr/rande.html). Example: `eu-west-2` (London). 
+
+The user associated to the AWS credentials can have administrator access for simplicity. If specific permissions want to be applied then the user should have a policiy following actions:
+
 - s3:PutObject
 - s3:GetObject
 - s3:ListAllMyBuckets
