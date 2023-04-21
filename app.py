@@ -22,7 +22,8 @@ if not os.path.exists("./client_files"):
 
 bucketList = [] # This is an array that contains the names of all the user's buckets.
 
-# Get the list of buckets and populate the bucketList array
+# Get the list of buckets and populate the bucketList array.
+# Buckets are obtained via the "list_buckets" method from the S3 client.
 for bucket in s3.list_buckets()['Buckets']:
     bucketList.append(bucket['Name'])
 if len(bucketList) > 0:
@@ -34,6 +35,7 @@ else:
 keyList = [] # This is an array that contains the names of all the available encryption keys.
 
 # Get the list of keys and populate the keyList array
+# Keys are obtained by listing all the files in the ./keys directory.
 files = os.listdir("./keys")
 for file in files:
     if file.endswith(".key"):
