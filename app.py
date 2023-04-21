@@ -122,7 +122,7 @@ def generateKey():
     if request.method == 'GET':
         return redirect("/settings")
     else:
-        keyName = request.form['keyName']
+        keyName = request.form['keyNameGenerated']
         encrypt_utils.generateKey("./keys/" + keyName + ".key")
         keyList.append(keyName + ".key")
         return render_template('settings.html', keyList=keyList, currentKey=currentKey, message="Key generated successfully")
@@ -135,10 +135,10 @@ def importKey():
     if request.method == 'GET':
         return redirect("/settings")
     else:
-        keyName = request.form['keyName']
+        keyName = request.form['keyNameImported']
         keyString = request.form['keyString']
         encrypt_utils.importKey("./keys/" + keyName + ".key", keyString)
-        keyList.append(keyName)
+        keyList.append(keyName + ".key")
         return render_template('settings.html', keyList=keyList, currentKey=currentKey, message="Key imported successfully")
 
 # Helper function that gets the list of files in a specific directory within S3. 
