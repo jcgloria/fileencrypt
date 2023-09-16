@@ -6,6 +6,13 @@ A web-based, client-side file encryption and decryption file manager integrated 
 - The UI components used are from [FastBootstrap](https://fastbootstrap.com/).
 - The encryption is done using Advanced Encryption Standard (AES) with the Fernet library from [cryptography](https://cryptography.io/en/latest/fernet/).
 
+<img  alt="fileencrypt1" src="https://github.com/jcgloria/fileencrypt/assets/30906750/951d811d-8d96-4bef-9820-d02ea31fff7c">
+<br>
+<br>
+<br>
+<img  alt="fileencrypt2" src="https://github.com/jcgloria/fileencrypt/assets/30906750/3205153f-f5b7-42c1-a2c8-15fb0ccaa590">
+
+
 ### Installation
 #### 1. Set AWS credentials in a new file `env.json` in the root directory of the project. The file should contain the following:
 ```json
